@@ -88,6 +88,6 @@ async function downImg(url, title, i) {
   console.log("----图片img-" + i + "下载完毕-------------\n");
   //监听全部下载完关闭流
   res.data.on("close", function () {
-    ws.end();
+    ws.close();
   });
 }
