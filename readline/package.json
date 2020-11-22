@@ -1,0 +1,11 @@
+{
+        "name": "2121",
+        "version": "212",
+        "description": "212",
+        "main": "index.js",
+        "scripts": {
+          "test": "echo Error: no test specified && exit 1"
+        },
+        "keywords": [],
+        "author": "211"
+    }
