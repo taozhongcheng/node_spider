@@ -38,8 +38,18 @@ function fsReadDir(path){
         })
     })
 }
+
+//延时等待
+function timedelay(time) {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve();
+      }, time);
+    });
+  }
 module.exports ={
     fsRead,
     fsWrite,
     fsReadDir,
+    timedelay
 }
