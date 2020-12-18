@@ -15,20 +15,23 @@ async function getPageNum(){
 
 
 // 获取当页电子书地址
+
 async function getbookItemUrl(page=1){
     const url =`https://sobooks.cc/page/${page}`;
     const res = await axios.get(url);
     const $ = cheerio.load(res.data);
     console.log(`当前是第${page}页\n`);
+    var bookUrlArr = [];
     $("#cardslist .card-item .thumb-img>a").each(async(i,item) =>{
         const bookUrl = $(item).attr('href');
-        await timedelay(i*30)
-        await getBookInfo(bookUrl);
+        bookUrlArr.push(bookUrl)
     })
+    return bookUrlArr
 }
 
 // 获取每一本书的详情
 let total = 1;
+getBookInfo('https://sobooks.cc/books/17237.html')
 async function getBookInfo(url){
     
     const query = {'e_secret_key': 866538}
@@ -80,7 +83,7 @@ async function getBookInfo(url){
     
     // 内容简介
     let bdes = $('.article-content').html();
-    bdes = bdes.match(/<h2>内容简介<\/h2>(.*)<h2>作者简介<\/h2>/);
+    bdes = bdes.match(/<h2>内容简介<\/h2>(.*)<\/h2>/);
     bdes = bdes ? bdes[0] : '';
     bdes = bdes.replace('<h2>内容简介</h2>','').replace('<h2>作者简介</h2>','')
    // 作者简介
@@ -102,12 +105,20 @@ async function getBookInfo(url){
     })
 }
 
+var pageBooklist = []
  async function sider(){
      const num = await getPageNum()
-     for(let i =1;i<= num;i++){
-         await timedelay(i*200)
-        await getbookItemUrl(i+1)
+     var page = 1
+      pageBooklist = await getbookItemUrl(page)
+     while(page<=num){
+         var index =0
+         while (index < pageBooklist.length){
+             await timedelay(index *10)
+             await getBookInfo(pageBooklist[index])
+             index ++
+         }
+         page++;
+         pageBooklist = await getbookItemUrl(page)
      }
  }
-
- sider()
+sider()
